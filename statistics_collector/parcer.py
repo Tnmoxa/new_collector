@@ -7,13 +7,12 @@ from dependencies import client
 from utils import save_stat_record, clear_table, safe_parse_iso
 
 async def parse_stat():
-    queues = ["NWOCG", "NWOF", "NWOB", "NWOM", "ENGEEJL"]
     await generate_report_test_to_work()
     await generate_report_to_design_review_and_back()
     await generate_dev_duration_report()
 
 async def generate_report_test_to_work():
-    queues = ["NWOCG"]
+    queues = ["NWOCG", "NWOF", "NWOB", "NWOM", "ENGEEJL"]
     print(f"Запущена функция: {parse_stat.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
