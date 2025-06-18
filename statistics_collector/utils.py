@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 from alembic import command
 from alembic.config import Config
@@ -12,6 +13,10 @@ async def clear_table(model):
         await session.execute(delete(model))
         await session.commit()
 
+def safe_parse_iso(date_str: str):
+    if date_str.endswith('+000'):
+        date_str = date_str.replace('+000', '+00:00')
+    return datetime.fromisoformat(date_str) + timedelta(hours=3)
 
 async def save_stat_record(data: dict, model: any) -> None:
     async with database() as session:
