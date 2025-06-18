@@ -30,7 +30,7 @@ class ReturnToWorkFromReview(Base):
     summary: Mapped[str] = mapped_column(String)
     assignee: Mapped[str] = mapped_column(String)
     status: Mapped[str] = mapped_column(String)
-    returns_to_work_from_review: Mapped[int] = mapped_column(Integer)
+    returns_to_work_from_design_review: Mapped[int] = mapped_column(Integer)
 
 
 class DevDuration(Base):
@@ -47,4 +47,3 @@ class DevDuration(Base):
     end_date: Mapped[str] = mapped_column(String)
     duration: Mapped[str] = mapped_column(String)
     parent_tag: Mapped[str] = mapped_column(String)
-    returns_to_work_from_review: Mapped[int] = mapped_column(Integer)
