@@ -13,7 +13,7 @@ async def parse_stat():
 
 async def generate_report_test_to_work():
     queues = ["NWOCG", "NWOF", "NWOB", "NWOM", "ENGEEJL"]
-    print(f"Запущена функция: {parse_stat.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Запущена функция: {generate_report_test_to_work.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -52,13 +52,13 @@ async def generate_report_test_to_work():
                 'returns_to_work': counter
             }, ReturnToWorkFromTests)
 
-    print(f"Завершена функция: {parse_stat.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Завершена функция: {generate_report_test_to_work.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
 async def generate_report_to_design_review_and_back(csv_locale = 'sheets'):
     queues = ['ENGEEJL', 'NWOF', 'NWOB', 'NWOCG', 'NWOM']
 
-    print(f"Запущена функция: {parse_stat.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Запущена функция: {generate_report_to_design_review_and_back.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
@@ -110,7 +110,7 @@ async def generate_report_to_design_review_and_back(csv_locale = 'sheets'):
                 'returns_to_work_from_design_review': counter
             }, ReturnToWorkFromReview)
 
-    print(f"Завершена функция: {parse_stat.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Завершена функция: {generate_report_to_design_review_and_back.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
 async def generate_dev_duration_report(csv_locale=0):
@@ -120,7 +120,7 @@ async def generate_dev_duration_report(csv_locale=0):
     ]
     queues = ['ENGEEJL', 'NWOF', 'NWOB', 'NWOCG', 'NWOM']
 
-    print(f"Запущена функция: {parse_stat.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Запущена функция: {generate_dev_duration_report.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
@@ -174,7 +174,7 @@ async def generate_dev_duration_report(csv_locale=0):
             }, DevDuration)
 
 
-    print(f"Завершена функция: {parse_stat.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Завершена функция: {generate_dev_duration_report.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
 if __name__ == '__main__':
