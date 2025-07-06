@@ -27,7 +27,7 @@ def clean_tracker_data(data: dict, model: any) -> dict:
         print(f"[!] Удалены поля, не входящие в модель: {removed}")
     return cleaned
 
-async def save_stat_record(data: dict, model: any, a) -> None:
+async def save_stat_record(data: dict, model: any) -> None:
     async with database() as session:
         try:
             cleaned_data = clean_tracker_data(data, model)

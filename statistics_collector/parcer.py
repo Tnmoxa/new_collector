@@ -20,7 +20,6 @@ async def parse_all_data():
     print(f"Запущена функция: {parse_all_data.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
-    a = []
     await clear_table(Issues)
     for queue in queues:
         print('Обрабатываю', queue)
@@ -37,8 +36,7 @@ async def parse_all_data():
             issue_as_dict['typeOf']=issue_as_dict['type']
             del issue_as_dict['self']
             del issue_as_dict['type']
-            await save_stat_record(issue_as_dict, Issues, a)
-        print(a)
+            await save_stat_record(issue_as_dict, Issues)
 
 
 
