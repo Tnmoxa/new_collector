@@ -3,6 +3,7 @@ import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
+import logging
 from parcer import parse_stat
 from utils import run_migrations
 
@@ -27,5 +28,7 @@ async def main():
 
 
 if __name__ == "__main__":
+
+    logging.getLogger("yandex_tracker_client").setLevel(logging.ERROR)
     run_migrations()
     asyncio.run(main())

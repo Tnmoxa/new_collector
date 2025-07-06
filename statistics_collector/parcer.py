@@ -2,14 +2,45 @@ import asyncio
 import csv
 from datetime import datetime
 
-from database.models import ReturnToWorkFromTests, ReturnToWorkFromReview, DevDuration
+from database.models import ReturnToWorkFromTests, ReturnToWorkFromReview, DevDuration, Issues
 from dependencies import client
 from utils import save_stat_record, clear_table, safe_parse_iso
 
 async def parse_stat():
-    await generate_report_test_to_work()
-    await generate_report_to_design_review_and_back()
-    await generate_dev_duration_report()
+    # await generate_report_test_to_work()
+    # await generate_report_to_design_review_and_back()
+    # await generate_dev_duration_report()
+    await parse_all_data()
+
+
+
+async def parse_all_data():
+    queues = ['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETESTS', 'BUG', 'NWOBUGS', 'NWO', 'PROBLOCKS',
+    'BLOCKS','XBLOCKS']
+    print(f"Запущена функция: {parse_all_data.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    from_date = "2025-01-01"
+    to_date = datetime.now().strftime("%Y-%m-%d")
+    a = []
+    await clear_table(Issues)
+    for queue in queues:
+        print('Обрабатываю', queue)
+        issues = client.issues.find(
+            filter={
+                'queue': queue,
+                'created': {'from': from_date, 'to': to_date}
+            },
+        )
+
+        for issue in issues:
+            issue_as_dict = {k: str(v) for k, v in issue.as_dict().items()}
+            issue_as_dict['link']=issue_as_dict['self']
+            issue_as_dict['typeOf']=issue_as_dict['type']
+            del issue_as_dict['self']
+            del issue_as_dict['type']
+            await save_stat_record(issue_as_dict, Issues, a)
+        print(a)
+
+
 
 async def generate_report_test_to_work():
     queues = ["NWOCG", "NWOF", "NWOB", "NWOM", "ENGEEJL"]
