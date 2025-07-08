@@ -1,42 +1,49 @@
 import asyncio
-import csv
 from datetime import datetime
 
-from database.models import ReturnToWorkFromTests, ReturnToWorkFromReview, DevDuration, Issues
-from dependencies import client
+from database.models import ReturnToWorkFromTests, ReturnToWorkFromReview, DevDuration, Issues1, Issues2, Issues3, Issues4
+from dependencies import client, database as db
 from utils import save_stat_record, clear_table, safe_parse_iso
 
+
 async def parse_stat():
-    await generate_report_test_to_work()
-    await generate_report_to_design_review_and_back()
-    await generate_dev_duration_report()
+    # await generate_report_test_to_work()
+    # await generate_report_to_design_review_and_back()
+    # await generate_dev_duration_report()
     await parse_all_data()
 
 
-
 async def parse_all_data():
-    queues = ['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETESTS', 'BUG', 'NWOBUGS', 'NWO', 'PROBLOCKS',
-    'BLOCKS','XBLOCKS']
+    queue1 = (Issues1,['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETESTS'])
+    queue2 = (Issues2,['BUG', 'NWOBUGS'])
+    queue3 = (Issues3,['NWO'])
+    queue4 = (Issues4,['PROBLOCKS', 'BLOCKS','XBLOCKS'])
     print(f"Запущена функция: {parse_all_data.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
-    await clear_table(Issues)
-    for queue in queues:
-        print('Обрабатываю', queue)
-        issues = client.issues.find(
-            filter={
-                'queue': queue,
-                'created': {'from': from_date, 'to': to_date}
-            },
-        )
+    group_queues = [queue1, queue2, queue3, queue4]
+    await clear_table(Issues1)
+    await clear_table(Issues2)
+    await clear_table(Issues3)
+    await clear_table(Issues4)
 
-        for issue in issues:
-            issue_as_dict = {k: str(v) for k, v in issue.as_dict().items()}
-            issue_as_dict['link']=issue_as_dict['self']
-            issue_as_dict['typeOf']=issue_as_dict['type']
-            del issue_as_dict['self']
-            del issue_as_dict['type']
-            await save_stat_record(issue_as_dict, Issues)
+    for queues in group_queues:
+        for queue in queues[1]:
+            print('Обрабатываю', queue)
+            issues = client.issues.find(
+                filter={
+                    'queue': queue,
+                    'created': {'from': from_date, 'to': to_date}
+                },
+            )
+
+            for issue in issues:
+                issue_as_dict = {k: str(v) for k, v in issue.as_dict().items()}
+                issue_as_dict['link']=issue_as_dict['self']
+                issue_as_dict['typeOf']=issue_as_dict['type']
+                del issue_as_dict['self']
+                del issue_as_dict['type']
+                await save_stat_record(issue_as_dict, queues[0])
 
 
 
