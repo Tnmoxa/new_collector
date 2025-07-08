@@ -7,10 +7,10 @@ from utils import save_stat_record, clear_table, safe_parse_iso
 
 
 async def parse_stat():
-    # await generate_report_test_to_work()
-    # await generate_report_to_design_review_and_back()
-    # await generate_dev_duration_report()
     await parse_all_data()
+    await generate_report_test_to_work()
+    await generate_report_to_design_review_and_back()
+    await generate_dev_duration_report()
 
 
 async def parse_all_data():

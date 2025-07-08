@@ -23,8 +23,14 @@ def clean_tracker_data(data: dict, model: any) -> dict:
     model_fields = model.__annotations__.keys()
     cleaned = {k: v for k, v in data.items() if k in model_fields}
     removed = [k for k in data.keys() if k not in model_fields]
-    if removed:
-        print(f"[!] Удалены поля, не входящие в модель: {removed}")
+    new_removed =[]
+    for k in removed:
+        try:
+            int(k[0])
+        except ValueError:
+            new_removed.append(k)
+    if new_removed:
+        print(f"[!] Удалены поля, не входящие в модель: {new_removed}")
     return cleaned
 
 async def save_stat_record(data: dict, model: any) -> None:
