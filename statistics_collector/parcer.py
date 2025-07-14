@@ -14,10 +14,10 @@ async def parse_stat():
     # await generate_dev_duration_report()
 
 async def parse_all_data():
-    queue1 = (Issues1, ['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETEST'])
-    queue2 = (Issues2, ['BUG', 'NWOBUG'])
-    queue3 = (Issues3, ['NWO'])
-    queue4 = (Issues4, ['PROBLOCKS', 'BLOCKS', 'XBLOCKS'])
+    queue1 = (Issues1, ['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETES'], 'queue1')
+    queue2 = (Issues2, ['BUG', 'NWOBUG'], 'queue2')
+    queue3 = (Issues3, ['NWO'], 'queue3')
+    queue4 = (Issues4, ['PROBLOCKS', 'BLOCKS', 'XBLOCKS'], 'queue4')
     print(f"Запущена функция: {parse_all_data.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
@@ -36,15 +36,19 @@ async def parse_all_data():
                     'created': {'from': from_date, 'to': to_date}
                 },
             )
-
+            # i=0
             for issue in issues:
+                # i+=1
                 issue_as_dict = {k: str(v) for k, v in issue.as_dict().items()}
                 issue_as_dict['link'] = issue_as_dict['self']
                 issue_as_dict['typeOf'] = issue_as_dict['type']
                 del issue_as_dict['self']
                 del issue_as_dict['type']
-                await parse_dicts_from_queues(issue_as_dict, issue)
+                await parse_dicts_from_queues(issue_as_dict, issue, queues[2])
+                # if i>=50:
+                #     break
                 await save_stat_record(issue_as_dict, queues[0])
+    print(f"Завершена функция: {parse_all_data.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
 async def generate_report_test_to_work():
@@ -87,7 +91,6 @@ async def generate_report_test_to_work():
                 'status': issue.status.display,
                 'returns_to_work': counter
             }, ReturnToWorkFromTests)
-
     print(f"Завершена функция: {generate_report_test_to_work.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
