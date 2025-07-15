@@ -1,4 +1,5 @@
 import ast
+import math
 import os
 from datetime import datetime, timedelta, timezone
 
@@ -47,6 +48,32 @@ async def save_stat_record(data: dict, model: any) -> None:
             print("[!] Ошибка при сохранении записи:")
             print(e)
 
+def business_time_delta(start: datetime, end: datetime) -> timedelta:
+    if end <= start:
+        return timedelta(0)
+
+    total = timedelta(0)
+    current = start
+
+    while current < end:
+        # Проверяем: если это будний день
+        if current.weekday() < 5:
+            # Вычисляем конец текущего дня
+            next_day = datetime(
+                year=current.year,
+                month=current.month,
+                day=current.day,
+                tzinfo=timezone.utc
+            ) + timedelta(days=1) + timedelta(hours=3)
+
+            interval_end = min(next_day, end)
+            total += interval_end - current
+
+        # Переходим к началу следующего дня
+        current = (current + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+
+    return total
+
 
 async def get_projects(issue_ref):
     changes = issue_ref.changelog.get_all()._data
@@ -80,8 +107,11 @@ async def get_status_duration(issue, issue_ref, queue):
 
                 d[to_status]['start_time'] = safe_parse_iso(change['updatedAt'])
                 if from_status:
-                    d[from_status]['duration'] = d[from_status]['duration'] + safe_parse_iso(change['updatedAt']) - \
-                                                 d[from_status]['start_time']
+                    # d[from_status]['duration'] = d[from_status]['duration'] + safe_parse_iso(change['updatedAt']) - \
+                    #                              d[from_status]['start_time']
+                    start = d[from_status]['start_time']
+                    end = safe_parse_iso(change['updatedAt'])
+                    d[from_status]['duration'] += business_time_delta(start, end)
             except KeyError as e:
                 print(e)
                 print('-------------------------------')
@@ -90,8 +120,11 @@ async def get_status_duration(issue, issue_ref, queue):
 
     if to_status:
         try:
-            d[to_status]['duration'] = d[to_status]['duration'] + (datetime.now(timezone.utc) + timedelta(hours=3)) - \
-                                   d[to_status]['start_time']
+            # d[to_status]['duration'] = d[to_status]['duration'] + (datetime.now(timezone.utc) + timedelta(hours=3)) - \
+            #                        d[to_status]['start_time']
+            start = d[to_status]['start_time']
+            end = (datetime.now(timezone.utc) + timedelta(hours=3))
+            d[to_status]['duration'] += business_time_delta(start, end)
         except KeyError as e:
             print(e)
             print('-------------------------------')
@@ -99,7 +132,7 @@ async def get_status_duration(issue, issue_ref, queue):
             print(e)
 
     for i in statuses[queue]:
-        issue['dur_' + i] = str(round(d[i]['duration'].total_seconds() / 86400, 0))
+        issue['dur_' + i] = str(math.ceil(d[i]['duration'].total_seconds() / 86400))
 
 
 async def parse_dicts_from_queues(issue, issue_ref, queue):
