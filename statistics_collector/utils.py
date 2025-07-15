@@ -55,60 +55,12 @@ async def get_projects(issue_ref):
 
 
 async def get_status_duration(issue, issue_ref, queue):
-    statuses = {'BLOCKS': {'backlog': 'Беклог', 'closedDev': 'Готово - Есть на Dev', 'dorabotka': 'Доработка',
-                           'inProgress': 'В работе', 'inReview': 'Ревью', 'novaja': 'Новая',
-                           'oceredNaQa': 'Очередь на QA', 'protestirovanoNaDevCustom': 'Протестировано на Dev-Custom',
-                           'testing': 'Тестируется', 'zablokirovana': 'Заблокирована'},
-                'BUG': {'backlog': 'Беклог', 'bagpodtverzhden': 'Баг подтвержден', 'closed': 'Закрыт',
-                        'closedDev': 'Готово - Есть на Dev', 'inProgress': 'В работе',
-                        'needsProcessing': 'Нужна обработка', 'otklonen': 'Отклонен', 'testing': 'Тестируется'},
-                'ENGEEJL': {'backlog': 'Беклог', 'closedDev': 'Готово - Есть на Dev',
-                            'closedProd': 'Закрыто - Есть на проде', 'inProgress': 'В работе', 'inReview': 'Ревью',
-                            'novaja': 'Новая', 'oceredNaQa': 'Очередь на QA',
-                            'protestirovanoNaDevCustom': 'Протестировано на Dev-Custom', 'testing': 'Тестируется',
-                            'zablokirovana': 'Заблокирована'},
-                'ENGEETES': {'beklog': 'Бэклог', 'inProgress': 'В работе', 'inReview': 'Ревью', 'novaja': 'Новая',
-                             'tehniceskijProekt': 'Технический проект', 'zablokirovana': 'Заблокирована',
-                             'zakryta': 'Закрыта'},
-                'NWO': {'acceptance': 'Приемка', 'backlog': 'Беклог', 'bagpodtverzhden': 'Баг подтвержден',
-                        'dizajn': 'Дизайн', 'estNaDev': 'Есть на DEV', 'gotovokrazrabotke': 'Готово к разработке',
-                        'inProgress': 'В работе', 'needsProcessing': 'Нужна обработка', 'needsTZ': 'Нужно ТЗ',
-                        'new': 'Новый', 'novaja': 'Новая', 'otklonen': 'Отклонен', 'otmenena': 'Отменена',
-                        'testing': 'Тестируется', 'testplan': 'Тест план', 'tpRndPoc': 'ТП. RnD, PoC',
-                        'tpVRabote': 'ТП. В работе', 'transferredtothedevelopers': 'Передано разработчикам',
-                        'vrazrabotke': 'В разработке', 'zakryta': 'Закрыта'},
-                'NWOB': {'backlog': 'Беклог', 'closedDev': 'Готово - Есть на Dev', 'inProgress': 'В работе',
-                         'inReview': 'Ревью', 'novaja': 'Новая', 'obrabotka': 'Обработка',
-                         'oceredNaQa': 'Очередь на QA', 'protestirovanoNaDevCustom': 'Протестировано на Dev-Custom',
-                         'proverkaPostanovsikom': 'Проверка постановщиком', 'testing': 'Тестируется',
-                         'zablokirovana': 'Заблокирована', 'zakryta': 'Закрыта'},
-                'NWOBUG': {'bagpodtverzhden': 'Баг подтвержден', 'checkforProduction': 'Проверить на Production',
-                           'dubl': 'Дубль', 'inProgress': 'В работе', 'new': 'Новый', 'onHold': 'Приостановлено',
-                           'testing': 'Тестируется', 'thebugislocalized': 'Баг локализован',
-                           'transferredtothedevelopers': 'Передано разработчикам', 'zakryta': 'Закрыта',
-                           'zhdetreliz': 'Ждет релиз'},
-                'NWOCG': {'backlog': 'Беклог', 'cancelled': 'Отменено', 'closedDev': 'Готово - Есть на Dev',
-                          'inProgress': 'В работе', 'inReview': 'Ревью', 'novaja': 'Новая',
-                          'oceredNaQa': 'Очередь на QA', 'protestirovanoNaDevCustom': 'Протестировано на Dev-Custom',
-                          'testing': 'Тестируется', 'zablokirovana': 'Заблокирована'},
-                'NWOF': {'backlog': 'Беклог', 'closedDev': 'Готово - Есть на Dev', 'dizajnrevju': 'Дизайн-ревью',
-                         'inProgress': 'В работе', 'novaja': 'Новая', 'oceredNaQa': 'Очередь на QA',
-                         'protestirovanoNaDevCustom': 'Протестировано на Dev-Custom', 'testing': 'Тестируется',
-                         'zablokirovana': 'Заблокирована'},
-                'NWOM': {'backlog': 'Беклог', 'closed': 'Закрыт', 'closedDev': 'Готово - Есть на Dev',
-                         'inProgress': 'В работе', 'inReview': 'Ревью', 'novaja': 'Новая',
-                         'oceredNaQa': 'Очередь на QA', 'protestirovanoNaDevCustom': 'Протестировано на Dev-Custom',
-                         'testing': 'Тестируется', 'zablokirovana': 'Заблокирована', 'zakryta': 'Закрыта'},
-                'PROBLOCKS': {'gotovokrazrabotke': 'Готово к разработке', 'new': 'Новый', 'otmenena': 'Отменена',
-                              'vrazrabotke': 'В разработке', 'zhdetreliz': 'Ждет релиз'},
-                'XBLOCKS': {'beklog': 'Бэклог', 'closed': 'Закрыт', 'inProgress': 'В работе', 'new': 'Новый',
-                            'novaja': 'Новая', 'open': 'Открыт'}}
 
     statuses = {
-        'queue1': {'zakryta', 'cancelled', 'obrabotka', 'protestirovanoNaDevCustom', 'testing', 'zablokirovana', 'dizajnrevju', 'closedDev', 'inReview', 'closed', 'novaja', 'inProgress', 'proverkaPostanovsikom', 'beklog', 'tehniceskijProekt', 'oceredNaQa', 'backlog', 'closedProd'},
-        'queue2': {'onHold', 'transferredtothedevelopers', 'zakryta', 'thebugislocalized', 'zhdetreliz', 'testing', 'closedDev', 'closed', 'inProgress', 'checkforProduction', 'needsProcessing', 'dubl', 'otklonen', 'bagpodtverzhden', 'backlog', 'new'},
-        'queue3': {'zakryta', 'otmenena', 'novaja', 'bagpodtverzhden', 'transferredtothedevelopers', 'gotovokrazrabotke', 'acceptance', 'inProgress', 'vrazrabotke', 'backlog', 'dizajn', 'tpRndPoc', 'estNaDev', 'otklonen', 'new', 'testing', 'testplan', 'tpVRabote', 'needsProcessing', 'needsTZ'},
-        'queue4': {'zhdetreliz', 'inReview', 'protestirovanoNaDevCustom', 'gotovokrazrabotke', 'closedDev', 'testing', 'zablokirovana', 'otmenena', 'novaja', 'inProgress', 'beklog', 'closed', 'open', 'dorabotka', 'vrazrabotke', 'oceredNaQa', 'backlog', 'new'}
+        'queue1': {'open', 'waitingForTheOtherTeam', 'new', 'approval', 'otklonen', 'zakryta', 'cancelled', 'obrabotka', 'protestirovanoNaDevCustom', 'testing', 'zablokirovana', 'dizajnrevju', 'closedDev', 'inReview', 'closed', 'novaja', 'inProgress', 'proverkaPostanovsikom', 'beklog', 'tehniceskijProekt', 'oceredNaQa', 'backlog', 'closedProd'},
+        'queue2': {'inReview', 'obrabotka', 'novaja', 'onHold', 'transferredtothedevelopers', 'zakryta', 'thebugislocalized', 'zhdetreliz', 'testing', 'closedDev', 'closed', 'inProgress', 'checkforProduction', 'needsProcessing', 'dubl', 'otklonen', 'bagpodtverzhden', 'backlog', 'new'},
+        'queue3': {'obrabotka', 'thebugislocalized', 'closed', 'closedDev', 'open', 'zakryta', 'otmenena', 'novaja', 'bagpodtverzhden', 'transferredtothedevelopers', 'gotovokrazrabotke', 'acceptance', 'inProgress', 'vrazrabotke', 'backlog', 'dizajn', 'tpRndPoc', 'estNaDev', 'otklonen', 'new', 'testing', 'testplan', 'tpVRabote', 'needsProcessing', 'needsTZ'},
+        'queue4': {'waitingForTheOtherTeam', 'obrabotka', 'zakryta', 'zhdetreliz', 'inReview', 'protestirovanoNaDevCustom', 'gotovokrazrabotke', 'closedDev', 'testing', 'zablokirovana', 'otmenena', 'novaja', 'inProgress', 'beklog', 'closed', 'open', 'dorabotka', 'vrazrabotke', 'oceredNaQa', 'backlog', 'new'}
         }
 
     d = {}
@@ -119,23 +71,35 @@ async def get_status_duration(issue, issue_ref, queue):
     to_status = None
     for change in changes:
         for field_change in change['fields']:
-            if field_change['field'].id != 'status':
-                continue
+            try:
+                if field_change['field'].id != 'status':
+                    continue
 
-            to_status = field_change['to'].key if field_change['to'] else ''
-            from_status = field_change['from'].key if field_change['from'] else ''
+                to_status = field_change['to'].key if field_change['to'] else ''
+                from_status = field_change['from'].key if field_change['from'] else ''
 
-            d[to_status]['start_time'] = safe_parse_iso(change['updatedAt'])
-            if from_status:
-                d[from_status]['duration'] = d[from_status]['duration'] + safe_parse_iso(change['updatedAt']) - \
-                                             d[from_status]['start_time']
+                d[to_status]['start_time'] = safe_parse_iso(change['updatedAt'])
+                if from_status:
+                    d[from_status]['duration'] = d[from_status]['duration'] + safe_parse_iso(change['updatedAt']) - \
+                                                 d[from_status]['start_time']
+            except KeyError as e:
+                print(e)
+                print('-------------------------------')
+            except Exception as e:
+                print(e)
 
     if to_status:
-        d[to_status]['duration'] = d[to_status]['duration'] + (datetime.now(timezone.utc) + timedelta(hours=3)) - \
+        try:
+            d[to_status]['duration'] = d[to_status]['duration'] + (datetime.now(timezone.utc) + timedelta(hours=3)) - \
                                    d[to_status]['start_time']
+        except KeyError as e:
+            print(e)
+            print('-------------------------------')
+        except Exception as e:
+            print(e)
 
     for i in statuses[queue]:
-        issue['dur_' + i] = str(round(d[i]['duration'].total_seconds() / 3600, 2))
+        issue['dur_' + i] = str(round(d[i]['duration'].total_seconds() / 86400, 0))
 
 
 async def parse_dicts_from_queues(issue, issue_ref, queue):
@@ -193,24 +157,6 @@ async def parse_dicts_from_queues(issue, issue_ref, queue):
     issue['previousQueue'] = ast.literal_eval(issue['previousQueue'])['display'] if issue.get('previousQueue',
                                                                                               None) else None
     issue['Size'] = ', '.join(ast.literal_eval(issue['Size'])) if issue.get('Size', None) else None
-
-
-async def get_duration(changes):
-    start_date = None
-    end_date = None
-    for change in changes:
-        for field_change in change['fields']:
-            if field_change['field'].id != 'status':
-                continue
-
-            to_status = field_change['to'].key if field_change['to'] else ''
-            if not start_date and to_status == 'inProgress':  # "В РАБОТЕ"
-                start_date = safe_parse_iso(change['updatedAt'])
-            elif not end_date and to_status == 'closedDev':  # "Готово - Есть на Dev"
-                end_date = safe_parse_iso(change['updatedAt'])
-                break
-
-    duration = int((end_date - start_date).days) if start_date and end_date else ""
 
 
 def run_migrations():

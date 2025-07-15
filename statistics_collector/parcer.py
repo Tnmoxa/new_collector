@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime
 
-from database.models import ReturnToWorkFromTests, ReturnToWorkFromReview, DevDuration, Issues1, Issues2, Issues3, \
+from database.models import ReturnToWorkFromTests, ReturnToWorkFromReview, Issues1, Issues2, Issues3, \
     Issues4
 from dependencies import client
 from utils import save_stat_record, clear_table, safe_parse_iso, parse_dicts_from_queues
@@ -9,8 +9,9 @@ from utils import save_stat_record, clear_table, safe_parse_iso, parse_dicts_fro
 
 async def parse_stat():
     await parse_all_data()
-    # await generate_report_test_to_work()
-    # await generate_report_to_design_review_and_back()
+    await generate_report_test_to_work()
+    await generate_report_to_design_review_and_back()
+    # Убираю, теперь длительности в главных таблицах
     # await generate_dev_duration_report()
 
 async def parse_all_data():
@@ -22,12 +23,9 @@ async def parse_all_data():
     from_date = "2025-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
     group_queues = [queue1, queue2, queue3, queue4]
-    await clear_table(Issues1)
-    await clear_table(Issues2)
-    await clear_table(Issues3)
-    await clear_table(Issues4)
 
     for queues in group_queues:
+        await clear_table(queues[0])
         for queue in queues[1]:
             print('Обрабатываю', queue)
             issues = client.issues.find(
@@ -154,68 +152,6 @@ async def generate_report_to_design_review_and_back(csv_locale='sheets'):
 
     print(
         f"Завершена функция: {generate_report_to_design_review_and_back.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-
-
-async def generate_dev_duration_report(csv_locale=0):
-    header = [
-        'Очередь', 'Приоритет', 'Тип', 'Ключ', 'Задача', 'Исполнитель', 'Текущий статус',
-        'Дата начала разработки', 'Дата готовности на Dev', 'Длительность (дней)', 'Теги родительской задачи'
-    ]
-    queues = ['ENGEEJL', 'NWOF', 'NWOB', 'NWOCG', 'NWOM']
-
-    print(f"Запущена функция: {generate_dev_duration_report.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-
-    from_date = "2025-01-01"
-    to_date = datetime.now().strftime("%Y-%m-%d")
-
-    await clear_table(DevDuration)
-
-    sep = ',' if csv_locale == 'excel' else ';'
-
-    for queue in queues:
-        print('Обрабатываю', queue)
-        issues = client.issues.find(
-            filter={
-                'queue': queue,
-                'created': {'from': from_date, 'to': to_date}
-            },
-        )
-
-        for issue in issues:
-            changes = issue.changelog.get_all()._data
-            start_date = None
-            end_date = None
-            for change in changes:
-                for field_change in change['fields']:
-                    if field_change['field'].id != 'status':
-                        continue
-
-                    to_status = field_change['to'].key if field_change['to'] else ''
-                    if not start_date and to_status == 'inProgress':  # "В РАБОТЕ"
-                        start_date = safe_parse_iso(change['updatedAt'])
-                    elif not end_date and to_status == 'closedDev':  # "Готово - Есть на Dev"
-                        end_date = safe_parse_iso(change['updatedAt'])
-                        break
-
-            duration = int((end_date - start_date).days) if start_date and end_date else ""
-
-            parent_tag = issue.parent.key if issue.parent else ''
-
-            await save_stat_record({
-                'queue': queue,
-                'priority': issue.priority.name if issue.priority else "",
-                'type': issue.type.name if issue.type else "",
-                'key': f'=HYPERLINK("https://tracker.yandex.ru/{issue.key}"{sep} "{issue.key}")',
-                'summary': issue.summary,
-                'assignee': issue.assignee.display if issue.assignee else "Не назначен",
-                'status': issue.status.display,
-                'start_date': start_date.strftime('%Y-%m-%d %H:%M') if start_date else "—",
-                'end_date': end_date.strftime('%Y-%m-%d %H:%M') if end_date else "—",
-                'duration': str(duration),
-                'parent_tag': parent_tag or "—"
-            }, DevDuration)
-
-    print(f"Завершена функция: {generate_dev_duration_report.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
 if __name__ == '__main__':

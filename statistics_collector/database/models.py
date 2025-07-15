@@ -34,26 +34,31 @@ class ReturnToWorkFromReview(Base):
     returns_to_work_from_design_review: Mapped[int] = mapped_column(Integer)
 
 
-class DevDuration(Base):
-    __tablename__ = 'dev_duration'
-
-    queue: Mapped[str] = mapped_column(String)
-    priority: Mapped[str] = mapped_column(String)
-    type: Mapped[str] = mapped_column(String)
-    key: Mapped[str] = mapped_column(String, primary_key=True)
-    summary: Mapped[str] = mapped_column(String)
-    assignee: Mapped[str] = mapped_column(String)
-    status: Mapped[str] = mapped_column(String)
-    start_date: Mapped[str] = mapped_column(String)
-    end_date: Mapped[str] = mapped_column(String)
-    duration: Mapped[str] = mapped_column(String)
-    parent_tag: Mapped[str] = mapped_column(String)
+# class DevDuration(Base):
+#     __tablename__ = 'dev_duration'
+#
+#     queue: Mapped[str] = mapped_column(String)
+#     priority: Mapped[str] = mapped_column(String)
+#     type: Mapped[str] = mapped_column(String)
+#     key: Mapped[str] = mapped_column(String, primary_key=True)
+#     summary: Mapped[str] = mapped_column(String)
+#     assignee: Mapped[str] = mapped_column(String)
+#     status: Mapped[str] = mapped_column(String)
+#     start_date: Mapped[str] = mapped_column(String)
+#     end_date: Mapped[str] = mapped_column(String)
+#     duration: Mapped[str] = mapped_column(String)
+#     parent_tag: Mapped[str] = mapped_column(String)
 
 class Issues1(Base):
     __tablename__ = 'issues1'
     id: Mapped[Optional[str]] = mapped_column(String, primary_key=True)
     MRIntoDev: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     MRIntoMaster: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_open: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_waitingForTheOtherTeam: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_new: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_approval: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_otklonen: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_zakryta: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_cancelled: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_obrabotka: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -160,7 +165,9 @@ class Issues2(Base):
     id: Mapped[Optional[str]] = mapped_column(String, primary_key=True)
     MRIntoDev: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     MRIntoMaster: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
-
+    dur_inReview: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_obrabotka: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_novaja: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_onHold: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_transferredtothedevelopers: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_zakryta: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -269,7 +276,11 @@ class Issues3(Base):
     id: Mapped[Optional[str]] = mapped_column(String, primary_key=True)
     MRIntoDev: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     MRIntoMaster: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
-
+    dur_obrabotka: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_thebugislocalized: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_closed: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_closedDev: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_open: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_zakryta: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_otmenena: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_novaja: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -387,7 +398,9 @@ class Issues4(Base):
     id: Mapped[Optional[str]] = mapped_column(String, primary_key=True)
     MRIntoDev: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     MRIntoMaster: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
-
+    dur_waitingForTheOtherTeam: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_obrabotka: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    dur_zakryta: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_zhdetreliz: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_inReview: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_protestirovanoNaDevCustom: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
