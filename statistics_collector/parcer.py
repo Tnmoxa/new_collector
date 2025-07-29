@@ -9,10 +9,10 @@ from utils import save_stat_record, clear_table, safe_parse_iso, parse_dicts_fro
 
 async def parse_stat():
     await parse_all_data()
-    await generate_report_test_to_work()
-    await generate_report_to_design_review_and_back()
     # Убираю, теперь длительности в главных таблицах
     # await generate_dev_duration_report()
+    # await generate_report_test_to_work()
+    # await generate_report_to_design_review_and_back()
 
 async def parse_all_data():
     queue1 = (Issues1, ['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETES'], 'queue1')
@@ -117,27 +117,23 @@ async def generate_report_to_design_review_and_back(csv_locale='sheets'):
             changes = issue.changelog.get_all()._data
             counter = 0
 
-            prev_status = None
-            for i, change in enumerate(changes):
-                for field_change in change['fields']:
-                    if not prev_status:
-                        if (field_change['field'].id == 'status'
-                            and field_change['to'].key == 'dizajnrevju' if field_change[
-                            'to'] else False):  # "Дизайн-ревью"
-                            prev_status = field_change['from'].key
-                    else:
-                        if (field_change['field'].id == 'status'):
-                            if (((field_change['from'].key == 'dizajnrevju' if field_change[
-                                'from'] else False)  # "Дизайн-ревью"
-                                 and (field_change['to'].key == prev_status if field_change['to'] else False))
-                                    or
-                                    ((field_change['from'].key == 'dizajnrevju' if field_change[
-                                        'from'] else False)  # "Дизайн-ревью"
-                                     and (field_change['to'].key == 'oceredNaQa' if field_change['to'] else False)
-                                     and (prev_status == 'testing'))
-                            ):
-                                counter += 1
-                                prev_status = None
+            # prev_status = None
+            # for i, change in enumerate(changes):
+            #     for field_change in change['fields']:
+            #         if not prev_status:
+            #             if (field_change['field'].id == 'status' and field_change['to'].key == 'dizajnrevju' if field_change['to'] else False):  # "Дизайн-ревью"
+            #                 prev_status = field_change['from'].key
+            #         else:
+            #             if (field_change['field'].id == 'status'):
+            #                 if (((field_change['from'].key == 'dizajnrevju' if field_change['from'] else False)  # "Дизайн-ревью"
+            #                      and (field_change['to'].key == prev_status if field_change['to'] else False))
+            #                         or
+            #                         ((field_change['from'].key == 'dizajnrevju' if field_change['from'] else False)  # "Дизайн-ревью"
+            #                          and (field_change['to'].key == 'oceredNaQa' if field_change['to'] else False)
+            #                          and (prev_status == 'testing'))
+            #                 ):
+            #                     counter += 1
+            #                     prev_status = None
 
             await save_stat_record({
                 'queue': queue,

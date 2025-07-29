@@ -78,6 +78,9 @@ class Issues1(Base):
     dur_backlog: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_closedProd: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
 
+    returns_to_work_from_design_review: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
+    returns_to_work_from_tests: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
+
     assignee: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     boards: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     components: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)

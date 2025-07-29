@@ -48,6 +48,7 @@ async def save_stat_record(data: dict, model: any) -> None:
             print("[!] Ошибка при сохранении записи:")
             print(e)
 
+
 def business_time_delta(start: datetime, end: datetime) -> timedelta:
     if end <= start:
         return timedelta(0)
@@ -82,13 +83,23 @@ async def get_projects(issue_ref):
 
 
 async def get_status_duration(issue, issue_ref, queue):
-
     statuses = {
-        'queue1': {'open', 'waitingForTheOtherTeam', 'new', 'approval', 'otklonen', 'zakryta', 'cancelled', 'obrabotka', 'protestirovanoNaDevCustom', 'testing', 'zablokirovana', 'dizajnrevju', 'closedDev', 'inReview', 'closed', 'novaja', 'inProgress', 'proverkaPostanovsikom', 'beklog', 'tehniceskijProekt', 'oceredNaQa', 'backlog', 'closedProd'},
-        'queue2': {'inReview', 'obrabotka', 'novaja', 'onHold', 'transferredtothedevelopers', 'zakryta', 'thebugislocalized', 'zhdetreliz', 'testing', 'closedDev', 'closed', 'inProgress', 'checkforProduction', 'needsProcessing', 'dubl', 'otklonen', 'bagpodtverzhden', 'backlog', 'new'},
-        'queue3': {'obrabotka', 'thebugislocalized', 'closed', 'closedDev', 'open', 'zakryta', 'otmenena', 'novaja', 'bagpodtverzhden', 'transferredtothedevelopers', 'gotovokrazrabotke', 'acceptance', 'inProgress', 'vrazrabotke', 'backlog', 'dizajn', 'tpRndPoc', 'estNaDev', 'otklonen', 'new', 'testing', 'testplan', 'tpVRabote', 'needsProcessing', 'needsTZ'},
-        'queue4': {'waitingForTheOtherTeam', 'obrabotka', 'zakryta', 'zhdetreliz', 'inReview', 'protestirovanoNaDevCustom', 'gotovokrazrabotke', 'closedDev', 'testing', 'zablokirovana', 'otmenena', 'novaja', 'inProgress', 'beklog', 'closed', 'open', 'dorabotka', 'vrazrabotke', 'oceredNaQa', 'backlog', 'new'}
-        }
+        'queue1': {'open', 'waitingForTheOtherTeam', 'new', 'approval', 'otklonen', 'zakryta', 'cancelled', 'obrabotka',
+                   'protestirovanoNaDevCustom', 'testing', 'zablokirovana', 'dizajnrevju', 'closedDev', 'inReview',
+                   'closed', 'novaja', 'inProgress', 'proverkaPostanovsikom', 'beklog', 'tehniceskijProekt',
+                   'oceredNaQa', 'backlog', 'closedProd'},
+        'queue2': {'inReview', 'obrabotka', 'novaja', 'onHold', 'transferredtothedevelopers', 'zakryta',
+                   'thebugislocalized', 'zhdetreliz', 'testing', 'closedDev', 'closed', 'inProgress',
+                   'checkforProduction', 'needsProcessing', 'dubl', 'otklonen', 'bagpodtverzhden', 'backlog', 'new'},
+        'queue3': {'obrabotka', 'thebugislocalized', 'closed', 'closedDev', 'open', 'zakryta', 'otmenena', 'novaja',
+                   'bagpodtverzhden', 'transferredtothedevelopers', 'gotovokrazrabotke', 'acceptance', 'inProgress',
+                   'vrazrabotke', 'backlog', 'dizajn', 'tpRndPoc', 'estNaDev', 'otklonen', 'new', 'testing', 'testplan',
+                   'tpVRabote', 'needsProcessing', 'needsTZ'},
+        'queue4': {'waitingForTheOtherTeam', 'obrabotka', 'zakryta', 'zhdetreliz', 'inReview',
+                   'protestirovanoNaDevCustom', 'gotovokrazrabotke', 'closedDev', 'testing', 'zablokirovana',
+                   'otmenena', 'novaja', 'inProgress', 'beklog', 'closed', 'open', 'dorabotka', 'vrazrabotke',
+                   'oceredNaQa', 'backlog', 'new'}
+    }
 
     d = {}
     for i in statuses[queue]:
@@ -96,11 +107,44 @@ async def get_status_duration(issue, issue_ref, queue):
 
     changes = issue_ref.changelog.get_all()._data
     to_status = None
+    counter_returns_from_test = 0
+    counter_returns_from_dr = 0
+    prev_status = None
     for change in changes:
         for field_change in change['fields']:
             try:
                 if field_change['field'].id != 'status':
                     continue
+
+                # Возврат из тестов
+                if queue == 'queue1':
+                    if (
+                            field_change['field'].id == 'status'
+                            and (field_change.get('from').key if field_change.get('from') else None) == 'testing'
+                            and (field_change.get('to').key if field_change.get('to') else None) == 'inProgress'
+                    ):
+                        counter_returns_from_test += 1
+
+                # возврат из дизайн ревью
+                if queue == 'queue1':
+                    if not prev_status:
+                        if (
+                                field_change['field'].id == 'status' and field_change['to'].key == 'dizajnrevju' if
+                                field_change['to'] else False):  # "Дизайн-ревью"
+                            prev_status = field_change['from'].key
+                    else:
+                        if field_change['field'].id == 'status':
+                            if (((field_change['from'].key == 'dizajnrevju' if field_change[
+                                'from'] else False)  # "Дизайн-ревью"
+                                 and (field_change['to'].key == prev_status if field_change['to'] else False))
+                                    or
+                                    ((field_change['from'].key == 'dizajnrevju' if field_change[
+                                        'from'] else False)  # "Дизайн-ревью"
+                                     and (field_change['to'].key == 'oceredNaQa' if field_change['to'] else False)
+                                     and (prev_status == 'testing'))
+                            ):
+                                counter_returns_from_dr += 1
+                                prev_status = None
 
                 to_status = field_change['to'].key if field_change['to'] else ''
                 from_status = field_change['from'].key if field_change['from'] else ''
@@ -133,6 +177,10 @@ async def get_status_duration(issue, issue_ref, queue):
 
     for i in statuses[queue]:
         issue['dur_' + i] = str(math.ceil(d[i]['duration'].total_seconds() / 86400))
+
+    if queue == 'queue1':
+        issue['returns_to_work_from_design_review'] = counter_returns_from_dr
+        issue['returns_to_work_from_tests'] = counter_returns_from_test
 
 
 async def parse_dicts_from_queues(issue, issue_ref, queue):
