@@ -11,8 +11,8 @@ async def parse_stat():
     await parse_all_data()
     # Убираю, теперь длительности в главных таблицах
     # await generate_dev_duration_report()
-    # await generate_report_test_to_work()
-    # await generate_report_to_design_review_and_back()
+    await generate_report_test_to_work()
+    await generate_report_to_design_review_and_back()
 
 async def parse_all_data():
     queue1 = (Issues1, ['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETES'], 'queue1')
