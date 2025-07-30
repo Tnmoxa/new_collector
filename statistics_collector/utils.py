@@ -107,7 +107,9 @@ async def get_status_duration(issue, issue_ref, queue):
     for i in statuses[queue]:
         d[i] = {'start_time': (datetime.now(timezone.utc) + timedelta(hours=3)), 'duration': timedelta(seconds=0)}
 
-    changes = issue_ref.changelog.get_all()._data
+    changes = issue_ref.changelog.get_all()
+    # if len(changes)>50:
+    #     print(issue_ref.key)
     to_status = None
     counter_returns_from_test = 0
     counter_returns_from_dr = 0

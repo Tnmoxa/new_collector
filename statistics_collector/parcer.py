@@ -42,6 +42,8 @@ async def parse_all_data():
                 issue_as_dict['typeOf'] = issue_as_dict['type']
                 del issue_as_dict['self']
                 del issue_as_dict['type']
+                if issue.key == 'NWOF-6197' or issue.key == 'NWOF-5448':
+                    a =1
                 await parse_dicts_from_queues(issue_as_dict, issue, queues[2])
                 # if i>=50:
                 #     break
