@@ -81,6 +81,9 @@ class Issues1(Base):
     returns_to_work_from_design_review: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
     returns_to_work_from_tests: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
 
+    project_primary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    project_secondary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+
     assignee: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     boards: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     components: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -95,7 +98,6 @@ class Issues1(Base):
     parent: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     pendingReplyFrom: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     primaryKey: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
-    project: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     priority: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     qaEngineer: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     queue: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -188,6 +190,9 @@ class Issues2(Base):
     dur_backlog: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_new: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
 
+    project_primary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    project_secondary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+
     assignee: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     boards: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     bugstage: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -203,7 +208,6 @@ class Issues2(Base):
     link: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     parent: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     pendingReplyFrom: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
-    project: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     priority: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     qaEngineer: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     queue: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -305,6 +309,9 @@ class Issues3(Base):
     dur_needsProcessing: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_needsTZ: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
 
+    project_primary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    project_secondary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+
     assignee: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     boards: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     components: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -318,7 +325,6 @@ class Issues3(Base):
     link: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     parent: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     pendingReplyFrom: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
-    project: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     priority: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     qaEngineer: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     queue: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -423,6 +429,9 @@ class Issues4(Base):
     dur_backlog: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     dur_new: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
 
+    project_primary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+    project_secondary: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
+
     assignee: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     boards: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     components: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
@@ -437,7 +446,6 @@ class Issues4(Base):
     parent: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     pendingReplyFrom: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     primaryKey: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
-    project: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     priority: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     qaEngineer: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)
     queue: Mapped[Optional[str]] = mapped_column(String, nullable=True, default=None)

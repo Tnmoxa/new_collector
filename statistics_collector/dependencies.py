@@ -37,7 +37,7 @@ link = os.environ['DATABASE_URL']
 database = Database(link=link)
 token = os.environ['YANDEX_TRACKER_TOKEN']
 org_id = os.environ['YANDEX_ORG_ID']
-client = TrackerClient(token=token, org_id=org_id)
+client = TrackerClient(token=token, org_id=org_id, api_version='v3')
 
 if 'asyncpg' in os.getenv("DATABASE_URL"):
     sync_database_url = os.getenv("DATABASE_URL").replace('+asyncpg', '')

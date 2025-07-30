@@ -21,6 +21,7 @@ def safe_parse_iso(date_str: str):
         date_str = date_str.replace('+000', '+00:00')
     return datetime.fromisoformat(date_str) + timedelta(hours=3)
 
+excceptions = ['project']
 
 def clean_tracker_data(data: dict, model: any) -> dict:
     model_fields = model.__annotations__.keys()
@@ -31,7 +32,8 @@ def clean_tracker_data(data: dict, model: any) -> dict:
         try:
             int(k[0])
         except ValueError:
-            new_removed.append(k)
+            if k not in excceptions:
+                new_removed.append(k)
     if new_removed:
         print(f"[!] Удалены поля, не входящие в модель: {new_removed}")
     return cleaned
@@ -238,6 +240,22 @@ async def parse_dicts_from_queues(issue, issue_ref, queue):
     issue['previousQueue'] = ast.literal_eval(issue['previousQueue'])['display'] if issue.get('previousQueue',
                                                                                               None) else None
     issue['Size'] = ', '.join(ast.literal_eval(issue['Size'])) if issue.get('Size', None) else None
+
+    if issue.get('project', None):
+        if ast.literal_eval(issue['project']).get('primary', None):
+            issue['project_primary'] = ast.literal_eval(issue['project'])['primary']['display']
+        else:
+            issue['project_primary'] = None
+    else:
+        issue['project_primary'] = None
+
+    if issue.get('project', None):
+        if ast.literal_eval(issue['project']).get('secondary', None):
+            issue['project_secondary'] = ', '.join([i['display'] for i in ast.literal_eval(issue['project'])['secondary']])
+        else:
+            issue['project_secondary'] = None
+    else:
+        issue['project_secondary'] = None
 
 
 def run_migrations():
