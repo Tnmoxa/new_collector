@@ -11,8 +11,8 @@ async def parse_stat():
     await parse_all_data()
     # Убираю, теперь длительности в главных таблицах
     # await generate_dev_duration_report()
-    await generate_report_test_to_work()
-    await generate_report_to_design_review_and_back()
+    # await generate_report_test_to_work()
+    # await generate_report_to_design_review_and_back()
 
 async def parse_all_data():
     queue1 = (Issues1, ['NWOF', 'NWOB', 'ENGEEJL', 'NWOM', 'NWOCG', 'ENGEETES'], 'queue1')
@@ -20,7 +20,7 @@ async def parse_all_data():
     queue3 = (Issues3, ['NWO'], 'queue3')
     queue4 = (Issues4, ['PROBLOCKS', 'BLOCKS', 'XBLOCKS'], 'queue4')
     print(f"Запущена функция: {parse_all_data.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    from_date = "2025-01-01"
+    from_date = "2024-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
     group_queues = [queue1, queue2, queue3, queue4]
 
@@ -36,17 +36,12 @@ async def parse_all_data():
             )
             # i=0
             for issue in issues:
-                # i+=1
                 issue_as_dict = {k: str(v) for k, v in issue.as_dict().items()}
                 issue_as_dict['link'] = issue_as_dict['self']
                 issue_as_dict['typeOf'] = issue_as_dict['type']
                 del issue_as_dict['self']
                 del issue_as_dict['type']
-                if issue.key == 'NWOF-6197' or issue.key == 'NWOF-5448':
-                    a =1
                 await parse_dicts_from_queues(issue_as_dict, issue, queues[2])
-                # if i>=50:
-                #     break
                 await save_stat_record(issue_as_dict, queues[0])
     print(f"Завершена функция: {parse_all_data.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
@@ -54,7 +49,7 @@ async def parse_all_data():
 async def generate_report_test_to_work():
     queues = ["NWOCG", "NWOF", "NWOB", "NWOM", "ENGEEJL"]
     print(f"Запущена функция: {generate_report_test_to_work.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    from_date = "2025-01-01"
+    from_date = "2024-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
 
     await clear_table(ReturnToWorkFromTests)
@@ -100,7 +95,7 @@ async def generate_report_to_design_review_and_back(csv_locale='sheets'):
     print(
         f"Запущена функция: {generate_report_to_design_review_and_back.__name__}, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    from_date = "2025-01-01"
+    from_date = "2024-01-01"
     to_date = datetime.now().strftime("%Y-%m-%d")
 
     await clear_table(ReturnToWorkFromReview)
